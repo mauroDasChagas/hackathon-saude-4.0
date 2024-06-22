@@ -1,13 +1,35 @@
-import React, { useState } from 'react';
+// src/pages/Login.jsx
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../services/firebase';
+import { useAuth } from '../hooks/AuthContext';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
+    const navigate = useNavigate();
+    const { user, setUser } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // lógica de autenticação aqui
-        // onLogin();
-        alert('login ainda não foi implementado!')
+    useEffect(() => {
+        if (user) {
+            navigate('/doctorHome'); // Redirecionar para a página desejada
+        }
+    }, [user, navigate]);
+
+    const handleGoogleLogin = () => {
+        const provider = new GoogleAuthProvider();
+
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const loggedInUser = result.user;
+                setUser(loggedInUser);
+                localStorage.setItem('user', JSON.stringify(loggedInUser));
+                navigate('/doctorHome');
+            })
+            .catch((error) => {
+                console.error('Erro de autenticação:', error);
+            });
     };
 
     return (
@@ -33,14 +55,21 @@ const Login = ({ onLogin }) => {
                     />
                 </div>
                 <button
-                    onClick={handleLogin}
+                    onClick={() => {}}
                     className="bg-primary text-white px-6 py-3 rounded-md text-xl hover:bg-primary-dark w-full"
                 >
                     Entrar
                 </button>
+
+                <button
+                    className="bg-red-600 text-white px-6 py-3 rounded-md text-xl hover:bg-red-700 w-full mt-4"
+                    onClick={handleGoogleLogin}
+                >
+                    Continuar com Google
+                </button>
             </div>
         </div>
     );
-}
+};
 
 export default Login;
