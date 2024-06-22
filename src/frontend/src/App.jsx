@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DoctorHome from './pages/DoctorHome';
 import PatientDetailsPage from './pages/PatientDetailsPage';
 import NewTreatmentPage from './pages/NewTreatmentPage';
+import PatientHome from './pages/PatientHome';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/doctorHome" element={<ProtectedRoute element={<DoctorHome />} />} />
           <Route path="/patient/:id" element={<ProtectedRoute element={<PatientDetailsPage />} />} />
           <Route path="/new-treatment" element={<ProtectedRoute element={<NewTreatmentPage />} />} />
+          <Route path="/patientHome" element={<PatientHome />} /> {/* proteger essa rota aqui depois */}
         </Routes>
       </Router>
     </AuthProvider>
