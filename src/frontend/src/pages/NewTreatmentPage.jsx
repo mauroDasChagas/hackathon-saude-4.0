@@ -39,7 +39,7 @@ const NewTreatmentPage = () => {
 
     return (
         <div className="p-4 bg-stone-100 min-h-screen text-white">
-            <h1 className="text-3xl text-secondary mb-6">Adicionar Novo Tratamento</h1>
+            <h1 className="text-3xl text-secondary mb-6">Adicionar novo tratamento</h1>
             <form onSubmit={handleSubmit} className="bg-primary p-8 rounded-md shadow-md">
                 <div className="mb-6">
                     <label className="block mb-2">Paciente Existente</label>
