@@ -8,7 +8,7 @@ const DoctorHome = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredPatients = mockData.filter(patient =>
-        patient.title.toLowerCase().includes(searchTerm.toLowerCase())
+        patient.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -28,7 +28,15 @@ const DoctorHome = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredPatients.map(patient => (
-                    <Card key={patient.id} id={patient.id} title={patient.title} description={patient.description} />
+                    <Card 
+                        key={patient.id} 
+                        id={patient.id} 
+                        name={patient.name} 
+                        age={patient.age} 
+                        treatment={patient.treatment} 
+                        doctor={patient.doctor} 
+                        nextAppointment={patient.nextAppointment} 
+                    />
                 ))}
             </div>
         </div>
