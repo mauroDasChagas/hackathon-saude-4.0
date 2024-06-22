@@ -35,7 +35,7 @@ const Login = () => {
     return (
         <div className="flex h-screen justify-center items-center bg-gradient-to-r from-teal-300 to-teal-500 text-white">
             <div className="bg-white p-8 rounded-lg shadow-lg text-center w-full max-w-md">
-                <h1 className="text-4xl mb-8 text-secondary">Bem-vindo(a) à Open Health</h1>
+                <h1 className="text-4xl mb-8 text-secondary">Bem-vindo(a) à <strong>MedSync</strong></h1>
                 <div className="mb-4">
                     <input
                         type="text"

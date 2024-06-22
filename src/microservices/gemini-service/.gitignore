@@ -1,0 +1,35 @@
+# venv
+venv/
+.env
+
+# compilação
+__pycache__/
+*.py[cod]
+
+# logs
+*.log
+
+# configurações do sistema
+.DS_Store
+
+# configurações de IDE
+.vscode/
+.idea/
+*.swp
+
+# arquivos de pacotes
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+*.egg-info/
+.installed.cfg
+*.so
