@@ -31,3 +31,8 @@ export const deletePatient = async (id) => {
     const response = await apiClient.delete(`/patients/${id}`);
     return response.data;
 };
+
+export const addTreatment = async (patientId, treatment) => {
+    const response = await apiClient.post(`/patients/${patientId}/treatments`, treatment);
+    return response.data;
+}
