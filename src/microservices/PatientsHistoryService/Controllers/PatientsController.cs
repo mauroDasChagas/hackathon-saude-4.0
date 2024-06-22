@@ -34,8 +34,21 @@ namespace PatientsHistoryService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Patient>> Create(Patient patient)
+        public async Task<ActionResult<Patient>> Create(PatientForCreationDto patientDto)
         {
+            var patient = new Patient
+            {
+                Name = patientDto.Name,
+                Age = patientDto.Age,
+                Treatments = patientDto.Treatments.ConvertAll(t => new Treatment
+                {
+                    Description = t.Description,
+                    Doctor = t.Doctor,
+                    NextAppointment = t.NextAppointment,
+                    Status = t.Status
+                })
+            };
+
             await _patientRepository.CreateAsync(patient);
 
             return CreatedAtRoute("GetPatient", new { id = patient.Id.ToString() }, patient);
