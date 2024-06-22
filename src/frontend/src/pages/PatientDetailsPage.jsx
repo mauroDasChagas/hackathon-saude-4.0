@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { mockData } from '../mockedData/patientsDataLake';
+import { getPatientById } from '../api/patientsHistoryService';
 
 const PatientDetailsPage = () => {
     const { id } = useParams();
-    const patient = mockData.find(p => p._id === parseInt(id));
+    const [patient, setPatient] = useState(null);
+
+    useEffect(() => {
+        const fetchPatient = async () => {
+            const data = await getPatientById(id);
+            setPatient(data);
+        };
+
+        fetchPatient();
+    }, [id]);
 
     if (!patient) {
-        return <div className="p-4 bg-stone-100 min-h-screen text-white">Paciente não encontrado</div>;
+        return <div className="p-4 bg-stone-100 min-h-screen text-white">Carregado dados do paciente...</div>;
     }
 
     const activeTreatments = patient.treatments.filter(treatment => treatment.status === 'ongoing');
