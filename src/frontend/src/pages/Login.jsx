@@ -55,14 +55,21 @@ const Login = () => {
                     />
                 </div>
                 <button
-                    onClick={handleLogin}
+                    onClick={() => {}}
                     className="bg-primary text-white px-6 py-3 rounded-md text-xl hover:bg-primary-dark w-full"
                 >
                     Entrar
                 </button>
+
+                <button
+                    className="bg-red-600 text-white px-6 py-3 rounded-md text-xl hover:bg-red-700 w-full mt-4"
+                    onClick={handleGoogleLogin}
+                >
+                    Continuar com Google
+                </button>
             </div>
         </div>
     );
-}
+};
 
 export default Login;
