@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockData, addPatient, addTreatment } from '../mockedData/patientsDataLake';
+import { mockData, addTreatment } from '../mockedData/patientsDataLake';
 
 const NewTreatmentPage = () => {
     const navigate = useNavigate();
     const [patientId, setPatientId] = useState('');
-    const [newPatientName, setNewPatientName] = useState('');
-    const [age, setAge] = useState('');
     const [description, setDescription] = useState('');
     const [doctor, setDoctor] = useState('');
     const [nextAppointment, setNextAppointment] = useState('');
@@ -20,17 +18,6 @@ const NewTreatmentPage = () => {
                 doctor,
                 nextAppointment,
                 status: 'ongoing'
-            });
-        } else {
-            addPatient({
-                name: newPatientName,
-                age,
-                treatments: [{
-                    description,
-                    doctor,
-                    nextAppointment,
-                    status: 'ongoing'
-                }]
             });
         }
 
@@ -55,23 +42,6 @@ const NewTreatmentPage = () => {
                             </option>
                         ))}
                     </select>
-                </div>
-                <div className="mb-6">
-                    <label className="block mb-2">Ou Novo Paciente</label>
-                    <input
-                        type="text"
-                        placeholder="Nome do novo paciente"
-                        value={newPatientName}
-                        onChange={(e) => setNewPatientName(e.target.value)}
-                        className="w-full p-3 rounded-md text-black mb-2"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Idade"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        className="w-full p-3 rounded-md text-black"
-                    />
                 </div>
                 <div className="mb-6">
                     <label className="block mb-2">Descrição do Tratamento</label>
