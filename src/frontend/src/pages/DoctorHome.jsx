@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Card from '../components/Card';
-import { mockData } from '../mockedData/patients';
+import { mockData } from '../mockedData/patientsDataLake';
 
 const userName = "Renan";
 
@@ -10,6 +10,11 @@ const DoctorHome = () => {
     const filteredPatients = mockData.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const patientsWithOngoingTreatments = filteredPatients.map(patient => ({
+        ...patient,
+        treatments: patient.treatments.filter(treatment => treatment.status === 'ongoing')
+    })).filter(patient => patient.treatments.length > 0);
 
     return (
         <div className="p-4 bg-stone-100 min-h-screen text-white">
@@ -27,15 +32,13 @@ const DoctorHome = () => {
                 />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredPatients.map(patient => (
-                    <Card 
-                        key={patient.id} 
-                        id={patient.id} 
-                        name={patient.name} 
-                        age={patient.age} 
-                        treatment={patient.treatment} 
-                        doctor={patient.doctor} 
-                        nextAppointment={patient.nextAppointment} 
+                {patientsWithOngoingTreatments.map(patient => (
+                    <Card
+                        key={patient._id}
+                        id={patient._id}
+                        name={patient.name}
+                        age={patient.age}
+                        treatments={patient.treatments}
                     />
                 ))}
             </div>
