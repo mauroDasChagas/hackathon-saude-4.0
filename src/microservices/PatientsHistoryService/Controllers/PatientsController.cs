@@ -26,8 +26,8 @@ namespace PatientsHistoryService.Controllers
         {
             var patient = await _patientRepository.GetAsync(id);
 
-            if (patient == null) 
-            { 
+            if (patient == null)
+            {
                 return NotFound();
             }
 
@@ -41,13 +41,48 @@ namespace PatientsHistoryService.Controllers
             {
                 Name = patientDto.Name,
                 Age = patientDto.Age,
+                Sex = patientDto.Sex,
+                Diagnosis = patientDto.Diagnosis.ConvertAll(d => new Diagnosis
+                {
+                    Condition = d.Condition,
+                    DiagnosedDate = d.DiagnosedDate
+                }),
+                FamilyHistory = new FamilyHistory
+                {
+                    Hypertension = patientDto.FamilyHistory.Hypertension,
+                    Diabetes = patientDto.FamilyHistory.Diabetes,
+                    HeartDisease = patientDto.FamilyHistory.HeartDisease
+                },
+                CurrentMedications = patientDto.CurrentMedications.ConvertAll(m => new Medication
+                {
+                    MedicationName = m.MedicationName,
+                    Dosage = m.Dosage,
+                    Frequency = m.Frequency,
+                    Response = m.Response
+                }),
+                Symptoms = patientDto.Symptoms,
+                Lifestyle = new Lifestyle
+                {
+                    Diet = patientDto.Lifestyle.Diet,
+                    ExerciseHabits = patientDto.Lifestyle.ExerciseHabits,
+                    Smoking = patientDto.Lifestyle.Smoking,
+                    AlcoholConsumption = patientDto.Lifestyle.AlcoholConsumption
+                },
+                RecentExams = patientDto.RecentExams.ConvertAll(e => new Exam
+                {
+                    ExamName = e.ExamName,
+                    Date = e.Date,
+                    Results = new BsonDocument(e.Results)
+                }),
                 Treatments = patientDto.Treatments.ConvertAll(t => new Treatment
                 {
                     Description = t.Description,
                     Doctor = t.Doctor,
                     NextAppointment = t.NextAppointment,
-                    Status = t.Status
-                })
+                    Status = t.Status,
+                    StartDate = DateTime.Now
+                }),
+                GeneralRecommendations = patientDto.GeneralRecommendations
             };
 
             await _patientRepository.CreateAsync(patient);
@@ -81,25 +116,6 @@ namespace PatientsHistoryService.Controllers
             }
 
             await _patientRepository.RemoveAsync(id);
-
-            return NoContent();
-        }
-
-        [HttpPost("{id:length(24)}/treatments")]
-        public async Task<IActionResult> AddTreatment(string id, [FromBody] Treatment treatment)
-        {
-            var patient = await _patientRepository.GetAsync(id);
-
-            if (patient == null)
-            {
-                return NotFound();
-            }
-
-            treatment.TreatmentId = ObjectId.GenerateNewId().ToString();
-            treatment.StartDate = treatment.StartDate == default ? DateTime.Now : treatment.StartDate;
-            patient.Treatments.Add(treatment);
-
-            await _patientRepository.UpdateAsync(id, patient);
 
             return NoContent();
         }

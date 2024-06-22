@@ -18,10 +18,13 @@ namespace PatientsHistoryService.Repositories
             var database = client.GetDatabase(settings.Value.DatabaseName);
             _patients = database.GetCollection<Patient>("Patients");
         }
+
         public async Task<List<Patient>> GetAsync() =>
             await _patients.Find(p => true).ToListAsync();
+
         public async Task<Patient> GetAsync(string id) =>
             await _patients.Find<Patient>(p => p.Id == id).FirstOrDefaultAsync();
+
         public async Task<Patient> CreateAsync(Patient patient)
         {
             patient.Id = ObjectId.GenerateNewId().ToString();
@@ -34,8 +37,10 @@ namespace PatientsHistoryService.Repositories
             await _patients.InsertOneAsync(patient);
             return patient;
         }
+
         public async Task UpdateAsync(string id, Patient patientIn) =>
             await _patients.ReplaceOneAsync(p => p.Id == id, patientIn);
+
         public async Task RemoveAsync(string id) =>
             await _patients.DeleteOneAsync(p => p.Id == id);
     }
