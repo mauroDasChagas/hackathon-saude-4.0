@@ -1,20 +1,29 @@
-// DoctorHome.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '../components/Card';
 import Sidebar from '../components/Sidebar';
-import { mockData } from '../mockedData/patientsDataLake';
+import { getPatients } from '../api/patientsHistoryService';
 
 const userName = "Renan";
 
 const DoctorHome = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [patients, setPatients] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    const filteredPatients = mockData.filter(patient =>
+    useEffect(() => {
+        const fetchPatients = async () => {
+            const data = await getPatients();
+            setPatients(data);
+        };
+
+        fetchPatients();
+    }, []);
+
+    const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -43,8 +52,8 @@ const DoctorHome = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {patientsWithOngoingTreatments.map(patient => (
                         <Card 
-                            key={patient._id} 
-                            id={patient._id} 
+                            key={patient.id} 
+                            id={patient.id} 
                             name={patient.name} 
                             age={patient.age} 
                             treatments={patient.treatments} 

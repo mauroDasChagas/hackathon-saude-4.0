@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockData, addTreatment } from '../mockedData/patientsDataLake';
+import { getPatients, addTreatment } from '../api/patientsHistoryService';
 
 const NewTreatmentPage = () => {
     const navigate = useNavigate();
@@ -8,20 +8,37 @@ const NewTreatmentPage = () => {
     const [description, setDescription] = useState('');
     const [doctor, setDoctor] = useState('');
     const [nextAppointment, setNextAppointment] = useState('');
+    const [patients, setPatients] = useState([]);
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        const fetchPatients = async () => {
+            const data = await getPatients();
+            setPatients(data);
+        };
+
+        fetchPatients();
+    }, []);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (patientId) {
-            addTreatment(patientId, {
+            const treatment = {
                 description,
                 doctor,
                 nextAppointment,
                 status: 'ongoing'
-            });
-        }
+            };
 
-        navigate('/doctorHome');
+            console.log("Enviando tratamento: ", treatment);
+
+            try {
+                await addTreatment(patientId, treatment);
+                navigate('/doctorHome');
+            } catch (error) {
+                console.error("Erro ao adicionar tratamento: ", error.response.data);
+            }
+        }
     };
 
     return (
@@ -36,8 +53,8 @@ const NewTreatmentPage = () => {
                         className="w-full p-3 rounded-md text-black"
                     >
                         <option value="">Selecione um paciente existente</option>
-                        {mockData.map(patient => (
-                            <option key={patient._id} value={patient._id}>
+                        {patients.map(patient => (
+                            <option key={patient.id} value={patient.id}>
                                 {patient.name}
                             </option>
                         ))}

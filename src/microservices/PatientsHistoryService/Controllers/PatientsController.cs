@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using PatientsHistoryService.Models;
 using PatientsHistoryService.Repositories;
 using System.Collections.Generic;
@@ -80,6 +81,25 @@ namespace PatientsHistoryService.Controllers
             }
 
             await _patientRepository.RemoveAsync(id);
+
+            return NoContent();
+        }
+
+        [HttpPost("{id:length(24)}/treatments")]
+        public async Task<IActionResult> AddTreatment(string id, [FromBody] Treatment treatment)
+        {
+            var patient = await _patientRepository.GetAsync(id);
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            treatment.TreatmentId = ObjectId.GenerateNewId().ToString();
+            treatment.StartDate = treatment.StartDate == default ? DateTime.Now : treatment.StartDate;
+            patient.Treatments.Add(treatment);
+
+            await _patientRepository.UpdateAsync(id, patient);
 
             return NoContent();
         }
