@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPatients, addTreatment } from '../api/patientsHistoryService';
+import { generateTreatmentSuggestions } from '../api/geminiService';
 
 const NewTreatmentPage = () => {
     const navigate = useNavigate();
@@ -9,6 +10,8 @@ const NewTreatmentPage = () => {
     const [doctor, setDoctor] = useState('');
     const [nextAppointment, setNextAppointment] = useState('');
     const [patients, setPatients] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -18,6 +21,23 @@ const NewTreatmentPage = () => {
 
         fetchPatients();
     }, []);
+
+    const handleGenerateSuggestions = async () => {
+        if (!patientId) return;
+
+        setLoadingSuggestions(true);
+        const patient = patients.find(p => p.id === patientId);
+        const prompt = `Baseado no histórico desse paciente: ${JSON.stringify(patient.treatments)}, sugira um novo tratamento para ele que garanta sua melhor recuperação possível.`;
+
+        try {
+            const response = await generateTreatmentSuggestions(prompt);
+            setSuggestions(response.response.split('\n').filter(s => s.trim() !== ''));
+        } catch (error) {
+            console.error("Erro ao gerar sugestões de tratamento: ", error);
+        } finally {
+            setLoadingSuggestions(false);
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -60,6 +80,28 @@ const NewTreatmentPage = () => {
                         ))}
                     </select>
                 </div>
+                <div className="mb-6">
+                    <button
+                        type="button"
+                        onClick={handleGenerateSuggestions}
+                        className="bg-secondary text-white px-6 py-3 rounded-md text-xl w-full"
+                        disabled={loadingSuggestions}
+                    >
+                        {loadingSuggestions ? 'Gerando sugestões...' : 'Gerar Sugestões de Tratamento'}
+                    </button>
+                </div>
+                {suggestions.length > 0 && (
+                    <div className="mb-6">
+                        <label className="block mb-2">Sugestões de Tratamento</label>
+                        <ul className="list-disc pl-5">
+                            {suggestions.map((suggestion, index) => (
+                                <li key={index} onClick={() => setDescription(suggestion)} className="cursor-pointer">
+                                    {suggestion}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 <div className="mb-6">
                     <label className="block mb-2">Descrição do Tratamento</label>
                     <textarea
