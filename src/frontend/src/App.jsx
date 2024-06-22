@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import DoctorHome from './pages/DoctorHome';
 import PatientDetailsPage from './pages/PatientDetailsPage';
+import NewTreatmentPage from './pages/NewTreatmentPage';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/doctorHome" element={<DoctorHome />} />
           <Route path="/patient/:id" element={<PatientDetailsPage />} />
+          <Route path="/new-treatment" element={<NewTreatmentPage />} />
         </Routes>
       </Router>
     </div>

@@ -56,3 +56,25 @@ export const mockData = [
         ]
     },
 ];
+
+export const addPatient = (patient) => {
+    mockData.push({
+        _id: mockData.length + 1,
+        ...patient,
+        treatments: patient.treatments.map(treatment => ({
+            treatmentId: uuidv4(),
+            ...treatment
+        }))
+    });
+};
+
+export const addTreatment = (patientId, treatment) => {
+    const patient = mockData.find(p => p._id === parseInt(patientId));
+    if (patient) {
+        patient.treatments.push({
+            treatmentId: uuidv4(),
+            ...treatment,
+            startDate: new Date().toISOString().split('T')[0]
+        });
+    }
+};
